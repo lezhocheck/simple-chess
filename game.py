@@ -109,11 +109,11 @@ class Player:
             turn_text = Text(f"{self.player_type.capitalize()}'s turn", t_size, pos, self.color)
             self.__gs.canvas.blit(turn_text.surface, turn_text.rect)
 
+        other_player = self.__gs.player_black if self == self.__gs.player_white else self.__gs.player_white
         if self.__gs.board.get_king(self).is_mated:
             t_size = 48
             pos = (self.__gs.window_size[0] / 2, self.__gs.window_size[1] / 2)
-            player = self.__gs.player_black if self == self.__gs.player_white else self.__gs.player_white
-            turn_text = Text(f'Player {player.player_type.capitalize()} wins!', t_size, pos, player.color)
+            turn_text = Text(f'Player {other_player.player_type.capitalize()} wins!', t_size, pos, other_player.color)
             rect = turn_text.rect.move(-turn_text.rect.size[0] / 2, -turn_text.rect.size[1] / 2)
             self.__gs.canvas.blit(turn_text.surface, rect)
 
@@ -127,7 +127,7 @@ class Player:
         size_y = 200
         position = (10, 100)
 
-        if self.player_type == 'black':
+        if self.player_type == 'white':
             position = (position[0], self.__gs.window_size[1] - size_y - position[1])
 
         figures = ['Pawn', 'Bishop', 'Knight', 'Rook', 'Queen']
@@ -140,12 +140,12 @@ class Player:
             image = 'resources/' + figures[i].lower() + '.png'
             image = pg.image.load(image).convert_alpha()
             image = pg.transform.scale(image, im_size)
-            image.fill(self.color, None, pg.BLEND_RGB_MULT)
+            image.fill(other_player.color, None, pg.BLEND_RGB_MULT)
             rect = image.get_rect().move(x, y)
             text_size = 18
             text_pos = rect.midright
             text_pos = (text_pos[0], text_pos[1] - text_size / 2)
-            text = Text(f': {self.get_defeated(figures[i])}', text_size, text_pos, self.color)
+            text = Text(f': {self.get_defeated(figures[i])}', text_size, text_pos, other_player.color)
 
             self.__gs.canvas.blit(image, rect)
             self.__gs.canvas.blit(text.surface, text.rect)
